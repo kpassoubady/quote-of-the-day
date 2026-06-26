@@ -52,7 +52,12 @@ let cachedQuotes = null;
 let lastCacheTime = 0;
 const CACHE_TTL = 30000; // 30 seconds
 
-// API Endpoint validation & core route - GET /api/quotes
+/**
+ * GET /api/quotes - Retrieve all quotes with caching
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response with quotes array and cache status
+ */
 app.get('/api/quotes', (req, res) => {
   try {
     const currentTime = Date.now();
@@ -88,7 +93,12 @@ app.get('/api/quotes', (req, res) => {
   }
 });
 
-// Single random quote endpoint
+/**
+ * GET /api/quotes/random - Retrieve a single random quote
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response with a randomly selected quote
+ */
 app.get('/api/quotes/random', (req, res) => {
   try {
     if (!quotes || quotes.length === 0) {
@@ -112,6 +122,21 @@ app.get('/api/quotes/random', (req, res) => {
       message: "An unexpected error occurred."
     });
   }
+});
+
+/**
+ * GET /health - Lightweight server health check
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON response describing basic server health
+ */
+app.get('/health', (req, res) => {
+  res.json({
+    success: true,
+    status: 'ok',
+    uptime: Math.round(process.uptime()),
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Fallback for SPA static routing or 404

@@ -71,9 +71,9 @@ What this script does:
 
 ---
 
-### 1) Dashboard Overview
+### 1) Home Page View
 
-![Dashboard Overview](docs/screenshots/dashboard-overview.png)
+![Home Page View](docs/screenshots/dashboard-overview.png)
 
 **Caption:** The main dashboard displays the current quote, author attribution, auto-cycle status badge, and progress indicator. This is the primary view where users can browse quotes and interact with key actions.
 

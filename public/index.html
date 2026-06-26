@@ -64,6 +64,7 @@
   <main class="container my-auto py-5">
     <div class="row justify-content-center">
       <div class="col-md-10 col-lg-8" id="home-view">
+        <div id="quote-announcer" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
         
         <!-- Rotating Quotes Module -->
         <div class="card border-0 shadow-lg text-white status-card overflow-hidden mb-4 rounded-4 position-relative">
@@ -80,7 +81,7 @@
               <span class="badge bg-danger text-uppercase px-3 py-2 letter-spacing fw-bold" id="auto-cycle-badge">
                 <i class="fa-solid fa-sync fa-spin me-1"></i> Auto-Cycling (5m)
               </span>
-              <button class="btn btn-sm btn-outline-light rounded-pill px-3 py-1" id="toggle-pause-btn" title="Pause Auto-Cycle">
+              <button class="btn btn-sm btn-outline-light rounded-pill px-3 py-1" id="toggle-pause-btn" title="Pause Auto-Cycle" aria-label="Pause quote auto-cycling" aria-keyshortcuts="Space">
                 <i id="pause-icon" class="fa-solid fa-pause"></i>
               </button>
             </div>
@@ -94,7 +95,7 @@
               </div>
 
               <!-- Real-time quote item output block -->
-              <div id="quote-wrapper" class="opacity-transition d-none">
+              <div id="quote-wrapper" class="opacity-transition d-none" tabindex="-1">
                 <blockquote class="blockquote quote-text-frame mb-3 position-relative">
                   <i class="fa-solid fa-quote-left quote-icon-left opacity-25"></i>
                   <span id="quote-text" class="h2 font-serif px-4 d-inline-block"></span>
@@ -110,7 +111,7 @@
                 <i class="fa-solid fa-triangle-exclamation fs-3 mb-2 d-block"></i>
                 <h5 class="alert-heading">Connection Interrupted</h5>
                 <p id="error-message" class="mb-0 small"></p>
-                <button class="btn btn-outline-danger btn-sm mt-3" id="retry-btn">
+                <button class="btn btn-outline-danger btn-sm mt-3" id="retry-btn" aria-label="Retry loading quotes">
                   <i class="fa-solid fa-repeat me-1"></i> Retry Connection
                 </button>
               </div>
@@ -119,10 +120,10 @@
 
             <!-- Interactivity Control Panel & Actions -->
             <div class="d-flex flex-wrap gap-2 justify-content-center mt-3" id="quote-actions">
-              <button class="btn btn-light rounded-pill px-4 py-2 border-0 shadow-sm d-flex align-items-center gap-2" id="next-btn" title="Get Next Random Quote">
+              <button class="btn btn-light rounded-pill px-4 py-2 border-0 shadow-sm d-flex align-items-center gap-2" id="next-btn" title="Get Next Random Quote" aria-label="Show next quote" aria-keyshortcuts="N">
                 <i class="fa-solid fa-forward-fast"></i> Next Quote
               </button>
-              <button class="btn btn-outline-light rounded-pill px-4 py-2 d-flex align-items-center gap-2" id="favorite-btn" title="Save Quote to local favorites">
+              <button class="btn btn-outline-light rounded-pill px-4 py-2 d-flex align-items-center gap-2" id="favorite-btn" title="Save Quote to local favorites" aria-label="Save current quote to favorites" aria-keyshortcuts="F" aria-pressed="false">
                 <i id="heart-icon" class="fa-regular fa-heart text-danger"></i> Favorite
               </button>
             </div>
@@ -131,20 +132,22 @@
             <div class="mt-4 pt-4 border-top border-light border-opacity-25 w-100" id="share-panel">
               <p class="small text-uppercase text-light opacity-50 letter-spacing mb-2">Spread the Inspiration</p>
               <div class="d-flex gap-2 justify-content-center">
-                <button class="btn btn-icon-share btn-twitter" id="share-twitter" title="Share on X / Twitter">
+                <button class="btn btn-icon-share btn-twitter" id="share-twitter" title="Share on X / Twitter" aria-label="Share current quote on X">
                   <i class="fa-brands fa-x-twitter"></i>
                 </button>
-                <button class="btn btn-icon-share btn-linkedin" id="share-linkedin" title="Share on LinkedIn">
+                <button class="btn btn-icon-share btn-linkedin" id="share-linkedin" title="Share on LinkedIn" aria-label="Share current quote on LinkedIn">
                   <i class="fa-brands fa-linkedin-in"></i>
                 </button>
-                <button class="btn btn-icon-share btn-facebook" id="share-facebook" title="Share on Facebook">
+                <button class="btn btn-icon-share btn-facebook" id="share-facebook" title="Share on Facebook" aria-label="Share current quote on Facebook">
                   <i class="fa-brands fa-facebook-f"></i>
                 </button>
-                <button class="btn btn-icon-share btn-copy" id="copy-clipboard" title="Copy to Clipboard">
+                <button class="btn btn-icon-share btn-copy" id="copy-clipboard" title="Copy to Clipboard" aria-label="Copy current quote to clipboard">
                   <i class="fa-regular fa-copy"></i>
                 </button>
               </div>
             </div>
+
+            <p class="small text-light opacity-75 mt-4 mb-0 text-center">Keyboard shortcuts: N for next quote, F to favorite, Space to pause or resume rotation.</p>
 
           </div>
         </div>
@@ -159,18 +162,48 @@
               <i class="fa-solid fa-heart text-danger"></i>
               My Favorite Collection
             </h2>
-            <button class="btn btn-outline-secondary btn-sm rounded-pill" id="clear-all-favs">
-              <i class="fa-solid fa-trash-can me-1"></i> Clear All
-            </button>
+            <div class="d-flex flex-wrap gap-2 justify-content-end">
+              <button class="btn btn-outline-primary btn-sm rounded-pill" id="back-to-current-btn" aria-label="Return to the current quote">
+                <i class="fa-solid fa-arrow-left me-1"></i> Back to Current Quote
+              </button>
+              <button class="btn btn-outline-secondary btn-sm rounded-pill" id="clear-all-favs" aria-label="Clear all favorite quotes">
+                <i class="fa-solid fa-trash-can me-1"></i> Clear All
+              </button>
+            </div>
           </div>
+
+          <div class="row g-3 align-items-end mb-4 favorites-toolbar">
+            <div class="col-md-6">
+              <label for="favorites-search" class="form-label fw-semibold mb-1">Search favorites</label>
+              <input type="search" class="form-control" id="favorites-search" placeholder="Search by quote text" aria-label="Search favorites by quote text">
+            </div>
+            <div class="col-md-3">
+              <label for="favorites-author-filter" class="form-label fw-semibold mb-1">Author</label>
+              <select class="form-select" id="favorites-author-filter" aria-label="Filter favorites by author">
+                <option value="all">All authors</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="favorites-length-filter" class="form-label fw-semibold mb-1">Quote length</label>
+              <select class="form-select" id="favorites-length-filter" aria-label="Filter favorites by quote length">
+                <option value="all">All lengths</option>
+                <option value="short">Short</option>
+                <option value="medium">Medium</option>
+                <option value="long">Long</option>
+              </select>
+            </div>
+          </div>
+
+          <p class="text-muted small mb-3 d-none" id="favorites-results-summary"></p>
+
+          <button class="btn btn-outline-primary rounded-pill px-4 mt-2" id="back-to-home-btn" aria-label="Go back to the home quote view">
+            Explore Quotes
+          </button>
 
           <div id="favorites-empty-state" class="text-center py-5">
             <i class="fa-solid fa-heart-broken text-muted fs-1 mb-3"></i>
             <h5 class="text-secondary fw-normal">Your favorites list is currently empty.</h5>
             <p class="text-muted small">Save high-energy quotes in the home directory to build your motivation collection.</p>
-            <button class="btn btn-primary rounded-pill px-4 mt-2" id="back-to-home-btn">
-              Explore Quotes
-            </button>
           </div>
 
           <!-- Dynamic favorites queue -->
