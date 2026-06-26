@@ -25,6 +25,11 @@ let progressTimer = null;
 let currentProgress = 0;
 let isPaused = false;
 let favorites = [];
+const favoritesFilters = {
+  search: '',
+  author: 'all',
+  length: 'all'
+};
 
 // DOM Elements
 const homeView = document.getElementById('home-view');
@@ -60,6 +65,12 @@ const favoritesContainer = document.getElementById('favorites-container');
 const favoritesEmptyState = document.getElementById('favorites-empty-state');
 const clearAllFavs = document.getElementById('clear-all-favs');
 const backToHomeBtn = document.getElementById('back-to-home-btn');
+const backToCurrentBtn = document.getElementById('back-to-current-btn');
+const favoritesSearchInput = document.getElementById('favorites-search');
+const favoritesAuthorFilter = document.getElementById('favorites-author-filter');
+const favoritesLengthFilter = document.getElementById('favorites-length-filter');
+const favoritesResultsSummary = document.getElementById('favorites-results-summary');
+const quoteAnnouncer = document.getElementById('quote-announcer');
 
 // Footer status indicators
 const healthSourceBadge = document.getElementById('health-source-badge');
@@ -88,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
   navHome.addEventListener('click', showMainView);
   navFavorites.addEventListener('click', showFavoritesView);
   backToHomeBtn.addEventListener('click', showMainView);
+  backToCurrentBtn.addEventListener('click', returnToCurrentQuote);
 
   // Manual actions
   nextBtn.addEventListener('click', () => {
@@ -100,12 +112,17 @@ document.addEventListener('DOMContentLoaded', () => {
   togglePauseBtn.addEventListener('click', toggleCycleState);
   retryBtn.addEventListener('click', fetchQuotes);
   clearAllFavs.addEventListener('click', clearAllFavorites);
+  favoritesSearchInput.addEventListener('input', handleFavoritesSearch);
+  favoritesAuthorFilter.addEventListener('change', handleFavoritesFilterChange);
+  favoritesLengthFilter.addEventListener('change', handleFavoritesFilterChange);
 
   // Social Share bindings
   shareTwitter.addEventListener('click', shareOnTwitter);
   shareLinkedin.addEventListener('click', shareOnLinkedIn);
   shareFacebook.addEventListener('click', shareOnFacebook);
   copyClipboard.addEventListener('click', copyQuoteToClipboard);
+
+  document.addEventListener('keydown', handleGlobalShortcuts);
 });
 
 // -------------------------------------------------------------
@@ -131,7 +148,14 @@ function showFavoritesView() {
   // Suspend auto cycle checks temporarily while viewing favorites list to optimize
   stopRotationTimer();
   stopProgressTrack();
+  syncFavoritesFilterOptions();
   renderFavoritesList();
+  favoritesSearchInput.focus();
+}
+
+function returnToCurrentQuote() {
+  showMainView();
+  quoteWrapper.focus();
 }
 
 async function fetchQuotes() {
@@ -199,9 +223,12 @@ function slideNextQuote() {
     } else {
       heartIcon.className = 'fa-regular fa-heart text-white';
     }
+    favoriteBtn.setAttribute('aria-pressed', String(isSaved));
+    favoriteBtn.setAttribute('aria-label', isSaved ? 'Remove current quote from favorites' : 'Save current quote to favorites');
 
     // Modern Unsplash backgrounds transition based on random select index values
     changeVisualCardBackground();
+    announceCurrentQuote(item);
 
     // Visual Fade In trigger
     hideSpinner();
@@ -336,24 +363,36 @@ function toggleCurrentFavorite() {
     // Remove
     favorites.splice(existingIndex, 1);
     heartIcon.className = 'fa-regular fa-heart text-white';
+    favoriteBtn.setAttribute('aria-pressed', 'false');
+    favoriteBtn.setAttribute('aria-label', 'Save current quote to favorites');
     showToast("Quote removed from favorites.", "fa-heart-broken text-warning");
   } else {
     // Add
     favorites.push(currentQuote);
     heartIcon.className = 'fa-solid fa-heart text-danger';
+    favoriteBtn.setAttribute('aria-pressed', 'true');
+    favoriteBtn.setAttribute('aria-label', 'Remove current quote from favorites');
     showToast("Saved quote to local collection!", "fa-heart text-danger");
   }
   saveFavorites();
+  syncFavoritesFilterOptions();
+
+  if (!favoritesView.classList.contains('d-none')) {
+    renderFavoritesList();
+  }
 }
 
 function removeFavoriteById(id) {
   favorites = favorites.filter(fav => fav.id !== id);
   saveFavorites();
+  syncFavoritesFilterOptions();
   renderFavoritesList();
   
   // Synchronize icon highlight if we deleted active index item
   if (quotesList.length > 0 && currentIndex !== -1 && quotesList[currentIndex].id === id) {
     heartIcon.className = 'fa-regular fa-heart text-white';
+    favoriteBtn.setAttribute('aria-pressed', 'false');
+    favoriteBtn.setAttribute('aria-label', 'Save current quote to favorites');
   }
   showToast("Quote removed.", "fa-circle-minus text-secondary");
 }
@@ -362,9 +401,12 @@ function clearAllFavorites() {
   if (confirm("Are you sure you want to parse out and delete all favorite quotes from your browser space?")) {
     favorites = [];
     saveFavorites();
+    syncFavoritesFilterOptions();
     renderFavoritesList();
     if (quotesList.length > 0) {
       heartIcon.className = 'fa-regular fa-heart text-white';
+      favoriteBtn.setAttribute('aria-pressed', 'false');
+      favoriteBtn.setAttribute('aria-label', 'Save current quote to favorites');
     }
     showToast("Cleared favorites directory list.", "fa-dumpster text-danger");
   }
@@ -384,39 +426,132 @@ function updateFavoritesBadge() {
 
 function renderFavoritesList() {
   favoritesContainer.innerHTML = '';
+  const filteredFavorites = getFilteredFavorites();
   
   if (favorites.length === 0) {
     favoritesEmptyState.classList.remove('d-none');
+    favoritesResultsSummary.classList.add('d-none');
     return;
   }
   
   favoritesEmptyState.classList.add('d-none');
+  updateFavoritesResultsSummary(filteredFavorites.length);
+
+  if (filteredFavorites.length === 0) {
+    const emptyFilterState = document.createElement('div');
+    emptyFilterState.className = 'text-center py-5 text-muted';
+    emptyFilterState.innerHTML = `
+      <i class="fa-solid fa-filter-circle-xmark fs-1 mb-3 d-block"></i>
+      <h5 class="fw-normal">No favorites match these filters.</h5>
+      <p class="small mb-0">Try a different search term, author, or quote length.</p>
+    `;
+    favoritesContainer.appendChild(emptyFilterState);
+    return;
+  }
   
-  favorites.forEach(fav => {
+  filteredFavorites.forEach(fav => {
     const itemEl = document.createElement('div');
     itemEl.className = 'list-group-item d-flex justify-content-between align-items-center py-3 px-2 fav-item rounded-3 mb-2';
-    
-    // Escalate item contents safely and construct inner HTML layout structure
-    itemEl.innerHTML = `
-      <div class="me-3 text-start">
-        <p class="mb-1 font-serif text-dark fs-5">"${fav.text}"</p>
-        <span class="text-muted small italic">- ${fav.author || 'Anonymous'}</span>
-      </div>
-      <div>
-        <button class="btn btn-outline-danger btn-sm border-0 btn-remove-fav px-2" title="Delete Saved Quote">
-          <i class="fa-solid fa-circle-xmark fs-5"></i>
-        </button>
-      </div>
-    `;
-    
-    // Bind internal handler action to the element item trash button directly
-    itemEl.querySelector('.btn-remove-fav').addEventListener('click', (e) => {
+    if (quotesList.length > 0 && currentIndex !== -1 && quotesList[currentIndex].id === fav.id) {
+      itemEl.classList.add('is-current');
+    }
+
+    const body = document.createElement('div');
+    body.className = 'me-3 text-start';
+
+    const quote = document.createElement('p');
+    quote.className = 'mb-1 font-serif text-dark fs-5';
+    quote.textContent = `"${fav.text}"`;
+
+    const author = document.createElement('span');
+    author.className = 'text-muted small italic';
+    author.textContent = `- ${fav.author || 'Anonymous'}`;
+
+    const actions = document.createElement('div');
+    const removeButton = document.createElement('button');
+    removeButton.className = 'btn btn-outline-danger btn-sm border-0 btn-remove-fav px-2';
+    removeButton.type = 'button';
+    removeButton.title = 'Delete Saved Quote';
+    removeButton.setAttribute('aria-label', `Remove favorite quote by ${fav.author || 'Anonymous'}`);
+    removeButton.innerHTML = '<i class="fa-solid fa-circle-xmark fs-5"></i>';
+
+    body.appendChild(quote);
+    body.appendChild(author);
+    actions.appendChild(removeButton);
+    itemEl.appendChild(body);
+    itemEl.appendChild(actions);
+
+    removeButton.addEventListener('click', (e) => {
       e.stopPropagation();
       removeFavoriteById(fav.id);
     });
     
     favoritesContainer.appendChild(itemEl);
   });
+}
+
+function handleFavoritesSearch(event) {
+  favoritesFilters.search = event.target.value.trim().toLowerCase();
+  renderFavoritesList();
+}
+
+function handleFavoritesFilterChange() {
+  favoritesFilters.author = favoritesAuthorFilter.value;
+  favoritesFilters.length = favoritesLengthFilter.value;
+  renderFavoritesList();
+}
+
+function syncFavoritesFilterOptions() {
+  const authors = Array.from(new Set(favorites.map((fav) => fav.author || 'Anonymous'))).sort((left, right) => left.localeCompare(right));
+  favoritesAuthorFilter.innerHTML = '<option value="all">All authors</option>';
+
+  authors.forEach((author) => {
+    const option = document.createElement('option');
+    option.value = author;
+    option.textContent = author;
+    favoritesAuthorFilter.appendChild(option);
+  });
+
+  if (!authors.includes(favoritesFilters.author)) {
+    favoritesFilters.author = 'all';
+  }
+
+  favoritesAuthorFilter.value = favoritesFilters.author;
+  favoritesLengthFilter.value = favoritesFilters.length;
+}
+
+function getFilteredFavorites() {
+  return favorites.filter((favorite) => {
+    const matchesSearch = favoritesFilters.search === '' || favorite.text.toLowerCase().includes(favoritesFilters.search);
+    const authorName = favorite.author || 'Anonymous';
+    const matchesAuthor = favoritesFilters.author === 'all' || authorName === favoritesFilters.author;
+    const matchesLength = matchesQuoteLength(favorite.text, favoritesFilters.length);
+
+    return matchesSearch && matchesAuthor && matchesLength;
+  });
+}
+
+function matchesQuoteLength(text, lengthFilter) {
+  if (lengthFilter === 'all') {
+    return true;
+  }
+
+  const wordCount = text.trim().split(/\s+/).length;
+
+  if (lengthFilter === 'short') {
+    return wordCount <= 8;
+  }
+
+  if (lengthFilter === 'medium') {
+    return wordCount >= 9 && wordCount <= 16;
+  }
+
+  return wordCount >= 17;
+}
+
+function updateFavoritesResultsSummary(matchCount) {
+  favoritesResultsSummary.classList.remove('d-none');
+  favoritesResultsSummary.textContent = `Showing ${matchCount} of ${favorites.length} favorite quote${favorites.length === 1 ? '' : 's'}.`;
 }
 
 // -------------------------------------------------------------
@@ -459,6 +594,60 @@ function copyQuoteToClipboard() {
     console.error("Clipboard operational interface failure:", err);
     showToast("Copy failed, please highlight manually.", "fa-circle-xmark text-danger");
   });
+}
+
+function handleGlobalShortcuts(event) {
+  if (shouldIgnoreShortcut(event)) {
+    return;
+  }
+
+  const key = event.key.toLowerCase();
+
+  if (key === 'n') {
+    event.preventDefault();
+    if (!homeView.classList.contains('d-none')) {
+      slideNextQuote();
+      resetProgressTrack();
+    }
+    return;
+  }
+
+  if (key === 'f') {
+    event.preventDefault();
+    if (!homeView.classList.contains('d-none')) {
+      toggleCurrentFavorite();
+    }
+    return;
+  }
+
+  if (event.code === 'Space') {
+    event.preventDefault();
+    if (!homeView.classList.contains('d-none')) {
+      toggleCycleState();
+    }
+  }
+}
+
+function shouldIgnoreShortcut(event) {
+  const target = event.target;
+
+  if (!target) {
+    return false;
+  }
+
+  if (event.metaKey || event.ctrlKey || event.altKey) {
+    return true;
+  }
+
+  return target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName);
+}
+
+function announceCurrentQuote(quote) {
+  if (!quoteAnnouncer) {
+    return;
+  }
+
+  quoteAnnouncer.textContent = `Now showing quote by ${quote.author || 'Anonymous'}: ${quote.text}`;
 }
 
 // -------------------------------------------------------------

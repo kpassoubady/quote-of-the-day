@@ -153,6 +153,30 @@ body {
   color: #ffffff !important;
 }
 
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+.nav-link:focus-visible,
+.btn:focus-visible,
+.form-control:focus-visible,
+.form-select:focus-visible,
+.list-group-item:focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 0.3rem rgba(245, 158, 11, 0.22) !important;
+}
+
+.btn-icon-share:focus-visible {
+  transform: translateY(-1px);
+}
+
+.favorites-toolbar {
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.9), rgba(241, 245, 249, 0.75));
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
 /* Favorite List style adjustments */
 .fav-item {
   transition: all 0.2s;
@@ -162,6 +186,11 @@ body {
 .fav-item:hover {
   background-color: #f8fafc;
   border-left-color: #dc3545;
+}
+
+.fav-item.is-current {
+  border-left-color: #0d6efd;
+  background-color: #eef4ff;
 }
 
 .fav-item .btn-remove-fav {
@@ -178,6 +207,11 @@ body {
   .status-card {
     min-height: 420px;
   }
+
+  .favorites-toolbar {
+    padding: 0.85rem;
+  }
+
   .quote-icon-left {
     left: -0.5rem;
     font-size: 1.5rem;

@@ -1,0 +1,32 @@
+Setup Type:
+Standard
+SDK Folder:
+/Users/kangs/Library/Android/sdk
+Total Download Size:
+649 MB
+SDK Components to Download:
+
+
+Android Emulator
+  
+366 MB
+
+Android SDK Build-Tools 36.1
+  
+76.8 MB
+
+Android SDK Build-Tools 37
+  
+78.1 MB
+
+Android SDK Platform 36.1
+  
+63.2 MB
+
+Android SDK Platform-Tools
+  
+15.7 MB
+
+Sources for Android 36.1
+  
+49.4 MB
