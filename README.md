@@ -41,3 +41,25 @@ npm start
 ```
 
 After launching, load up [http://localhost:3000](http://localhost:3000) inside your web browser to play around with the application!
+
+---
+
+## 📸 Application Screenshots
+
+### 1) Dashboard Overview
+
+![Dashboard Overview](docs/screenshots/dashboard-overview.png)
+
+**Caption:** The main dashboard displays the current quote, author attribution, auto-cycle status badge, and progress indicator. This is the primary view where users can browse quotes and interact with key actions.
+
+### 2) Quote Controls & Sharing
+
+![Quote Controls and Sharing](docs/screenshots/controls-and-sharing.png)
+
+**Caption:** The action area highlights core functionality including next quote navigation, favorites toggle, and one-click sharing to X, LinkedIn, Facebook, plus clipboard copy for quick reuse.
+
+### 3) Favorites Collection View
+
+![Favorites Collection View](docs/screenshots/favorites-view.png)
+
+**Caption:** The favorites interface shows saved quotes persisted in local storage, allowing users to build a personal quote library and manage entries in one dedicated view.
