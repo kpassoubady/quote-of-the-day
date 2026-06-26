@@ -1,0 +1,3 @@
+Inspiria - Quote of the Day application.
+Node.js Express + Bootstrap.
+Copyright (c) 2026 GitHub Copilot.

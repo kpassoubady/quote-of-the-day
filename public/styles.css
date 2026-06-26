@@ -1,0 +1,189 @@
+/* Custom Styling for Inspiria App */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --primary-font: 'Plus Jakarta Sans', sans-serif;
+  --serif-font: 'Playfair Display', Georgia, serif;
+}
+
+body {
+  font-family: var(--primary-font);
+  background: radial-gradient(circle at 10% 20%, rgba(200, 215, 230, 0.4) 0%, rgba(240, 245, 250, 0.5) 100%) !important;
+  color: #2b3a4a;
+}
+
+/* Background image overlays */
+.status-card {
+  min-height: 480px;
+  background-image: url('https://images.unsplash.com/photo-1518495973542-4542c06a5843?q=80&w=1280');
+  background-size: cover;
+  background-position: center;
+  transition: background-image 1s ease-in-out;
+}
+
+.card-bg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(16, 24, 48, 0.9) 0%, rgba(32, 48, 64, 0.8) 100%);
+  z-index: 0;
+}
+
+/* Font styles */
+.font-serif {
+  font-family: var(--serif-font);
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+/* Quote frames style indicators */
+.quote-text-frame {
+  position: relative;
+  display: inline-block;
+  padding: 0 1rem;
+}
+
+.quote-icon-left, .quote-icon-right {
+  font-size: 2.25rem;
+  color: #fff;
+  position: absolute;
+}
+
+.quote-icon-left {
+  top: -1.5rem;
+  left: -2rem;
+}
+
+.quote-icon-right {
+  bottom: -1rem;
+  right: -2rem;
+}
+
+/* Progress-bar tracker */
+.progress-bar-container {
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  width: 0%;
+  background-color: #ffc107;
+  transition: width 50ms linear;
+}
+
+/* Timing letters spacing */
+.letter-spacing {
+  letter-spacing: 0.12em;
+}
+
+/* Transitions effects */
+.opacity-transition {
+  transition: opacity 0.4s ease-in-out;
+  opacity: 1;
+}
+
+.opacity-0 {
+  opacity: 0 !important;
+}
+
+/* Loader custom height */
+.min-height-200 {
+  min-height: 220px;
+}
+
+/* Share control buttons styling wrapper */
+.btn-icon-share {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.08);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-icon-share:hover {
+  transform: translateY(-3px);
+  color: #ffffff;
+}
+
+.btn-twitter:hover {
+  background-color: #1da1f2;
+  border-color: #1da1f2;
+}
+
+.btn-linkedin:hover {
+  background-color: #0a66c2;
+  border-color: #0a66c2;
+}
+
+.btn-facebook:hover {
+  background-color: #1877f2;
+  border-color: #1877f2;
+}
+
+.btn-copy:hover {
+  background-color: #20b080;
+  border-color: #20b080;
+}
+
+/* Toast modification */
+.toast {
+  border-radius: 12px;
+}
+
+/* Navigation button design */
+.nav-link {
+  font-weight: 500;
+  padding: 0.5rem 1rem !important;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff !important;
+}
+
+/* Favorite List style adjustments */
+.fav-item {
+  transition: all 0.2s;
+  border-left: 4px solid transparent;
+}
+
+.fav-item:hover {
+  background-color: #f8fafc;
+  border-left-color: #dc3545;
+}
+
+.fav-item .btn-remove-fav {
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.fav-item:hover .btn-remove-fav {
+  opacity: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .status-card {
+    min-height: 420px;
+  }
+  .quote-icon-left {
+    left: -0.5rem;
+    font-size: 1.5rem;
+  }
+  .quote-icon-right {
+    right: -0.5rem;
+    font-size: 1.5rem;
+  }
+}

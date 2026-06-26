@@ -1,0 +1,28 @@
+{
+  "name": "quote-of-the-day-showcase",
+  "version": "1.0.0",
+  "description": "A beautiful responsive Quote of the Day web application with an automated 5-minute rotation, social sharing, local favoriting, Node.js + Express backend, caching, and SEO optimization.",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "quote",
+    "express",
+    "bootstrap",
+    "javascript",
+    "showcase"
+  ],
+  "author": "GitHub Copilot",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "helmet": "^7.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
