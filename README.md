@@ -46,6 +46,16 @@ After launching, load up [http://localhost:3000](http://localhost:3000) inside y
 
 ## 📸 Application Screenshots
 
+## 🎬 Animated Demo
+
+![Inspiria Animated Demo](docs/screenshots/app-demo.gif)
+
+**Caption:** A short walkthrough of the main experience, cycling through the dashboard, quote actions and sharing controls, and the favorites collection view.
+
+For higher-quality playback, see the MP4 version: [View Demo Video](docs/screenshots/app-demo.mp4)
+
+---
+
 ### 1) Dashboard Overview
 
 ![Dashboard Overview](docs/screenshots/dashboard-overview.png)
