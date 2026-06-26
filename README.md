@@ -54,6 +54,21 @@ After launching, load up [http://localhost:3000](http://localhost:3000) inside y
 
 For higher-quality playback, see the MP4 version: [View Demo Video](docs/screenshots/quotes-transition.mp4)
 
+### Regenerate Quote Transition Media
+
+You can regenerate the 5-step quote transition screenshots and both video formats (GIF + MP4) anytime the app UI changes:
+
+```bash
+npm run demo:quotes
+```
+
+What this script does:
+
+- Opens the app with Playwright
+- Clicks **Next Quote** repeatedly and captures 5 different quote frames
+- Rebuilds [docs/screenshots/quotes-transition.mp4](docs/screenshots/quotes-transition.mp4)
+- Rebuilds [docs/screenshots/quotes-transition.gif](docs/screenshots/quotes-transition.gif)
+
 ---
 
 ### 1) Dashboard Overview
