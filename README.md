@@ -48,11 +48,11 @@ After launching, load up [http://localhost:3000](http://localhost:3000) inside y
 
 ## 🎬 Animated Demo
 
-![Inspiria Animated Demo](docs/screenshots/app-demo.gif)
+![Inspiria Quote Transition Demo](docs/screenshots/quotes-transition.gif)
 
-**Caption:** A short walkthrough of the main experience, cycling through the dashboard, quote actions and sharing controls, and the favorites collection view.
+**Caption:** Transition demo captured by clicking the **Next Quote** button 5 times, showcasing smooth quote changes, typography styling, and animated card presentation.
 
-For higher-quality playback, see the MP4 version: [View Demo Video](docs/screenshots/app-demo.mp4)
+For higher-quality playback, see the MP4 version: [View Demo Video](docs/screenshots/quotes-transition.mp4)
 
 ---
 
