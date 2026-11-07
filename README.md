@@ -42,6 +42,37 @@ npm start
 
 After launching, load up [http://localhost:3000](http://localhost:3000) inside your web browser to play around with the application!
 
+
+## 📱 Mobile app shell (Spec 01)
+
+A new Expo TypeScript mobile app now lives in `mobile/`.
+
+### Mobile setup
+
+```bash
+cd mobile
+cp .env.example .env
+npm install
+```
+
+Environment key intent vs Expo runtime requirement:
+
+- Intent key: `REACT_NATIVE_API_BASE_URL` (the logical app config key used in planning/docs).
+- Expo runtime key (required in code): `EXPO_PUBLIC_REACT_NATIVE_API_BASE_URL`.
+
+In `mobile/.env`, set the Expo runtime key:
+
+- `EXPO_PUBLIC_REACT_NATIVE_API_BASE_URL` (examples: `http://localhost:3000` for dev, `https://kavinschool.com` for prod)
+
+If this Expo key is missing or invalid, the app shows a configuration error screen on launch.
+
+### Run mobile app
+
+```bash
+cd mobile
+npm run start
+```
+
 ---
 
 ## 📸 Application Screenshots
