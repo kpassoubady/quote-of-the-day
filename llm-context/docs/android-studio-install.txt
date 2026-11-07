@@ -30,3 +30,42 @@ Android SDK Platform-Tools
 Sources for Android 36.1
   
 49.4 MB
+
+kangs@Kangs-Mac ~ % xcodebuild -version
+pod --version
+java -version
+adb --version
+emulator -version
+Xcode 26.6
+Build version 17F113
+1.16.2
+openjdk version "25.0.2" 2026-01-20 LTS
+OpenJDK Runtime Environment Temurin-25.0.2+10 (build 25.0.2+10-LTS)
+OpenJDK 64-Bit Server VM Temurin-25.0.2+10 (build 25.0.2+10-LTS, mixed mode, sharing)
+Android Debug Bridge version 1.0.41
+Version 37.0.0-14910828
+Installed as /Users/kangs/Library/Android/sdk/platform-tools/adb
+Running on Darwin 25.5.0 (arm64)
+INFO         | Android emulator version 36.6.11.0 (build_id 15507667) (CL:N/A)
+INFO         | Graphics backend: gfxstream
+Android emulator version 36.6.11.0 (build_id 15507667) (CL:N/A)
+Copyright (C) 2006-2024 The Android Open Source Project and many others.
+This program is a derivative of the QEMU CPU emulator (www.qemu.org).
+
+  This software is licensed under the terms of the GNU General Public
+  License version 2, as published by the Free Software Foundation, and
+  may be copied, distributed, and modified under those terms.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+kangs@Kangs-Mac ~ % emulator -list-avds
+Pixel_10_Pro_XL
+kangs@Kangs-Mac ~ % echo $ANDROID_HOME
+ls "$ANDROID_HOME"
+/Users/kangs/Library/Android/sdk
+build-tools	licenses	platforms	sources
+emulator	platform-tools	skins		system-images
+ß
